@@ -1,47 +1,39 @@
 <!DOCTYPE html>
 <html>
-<body>
-
-<p>Click the button to get your coordinates.</p>
-
-<button onclick="getLocation()">Try It</button>
-
-<p id="demo"></p>
-
+<head>
+<title>HTML5 Geolocation</title>
+<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <script>
-var x = document.getElementById("demo");
-
-function getLocation() {
-    try
-    {
-  if (navigator.geolocation) {
-    alert('start1');
-    navigator.geolocation.getCurrentPosition(showPosition);
-  } else { 
-    x.innerHTML = "Geolocation is not supported by this browser.";
-  }
-    }
-    catch(e)
-    {
-alert(e);
-
-    }
+function init()
+{
+    window.navigator.geolocation.getCurrentPosition(current_position);
 }
+ 
+function current_position(position)
+{
+    var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    var lati = position.coords.latitude;
+    var long = position.coords.longitude;   
+    
+    document.getElementById('location').innerHTML = lati + "-" + long;
 
-function showPosition(position) {
-    alert('start');
-
-    try
-    {
-  alert("Latitude: " + position.coords.latitude + "Longitude: " + position.coords.longitude);
+    var map_options = {
+        center:latlng,zoom:14,
+        mapTypeId:google.maps.MapTypeId.ROADMAP,
+        mapTypeControl:false,
+        navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL}
     }
-    catch(e)
-    {
-alert(e);
-
-    }
+    
+    var map = new google.maps.Map(document.getElementById("google_map"), map_options);
+    
+    var marker = new google.maps.Marker({position:latlng,map:map,title:"You are here!"});
 }
+window.addEventListener("load", init);
 </script>
-
+</head>
+<body>
+    <p>Test</p>
+    <div id="google_map" style="width:500px;height:500px;"></div>
+    <div id="location"></div>
 </body>
 </html>
